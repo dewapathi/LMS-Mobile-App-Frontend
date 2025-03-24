@@ -14,6 +14,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { Image, Text, View } from "react-native";
 import Onboarding from "./(routes)/onboarding";
 import React from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -39,7 +40,13 @@ export default function RootLayout() {
     );
   }
 
-  return <RootLayoutNav />;
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Text> </Text>
+      {/* Wrap everything in GestureHandlerRootView */}
+      <RootLayoutNav />
+    </GestureHandlerRootView>
+  );
 }
 
 function RootLayoutNav() {
@@ -55,6 +62,9 @@ function RootLayoutNav() {
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
             <Stack.Screen name="/welcome-intro/index" />
+            <Stack.Screen name="/login/index" />
+            <Stack.Screen name="/sign-up/index" />
+            <Stack.Screen name="/forgot-password/index" />
           </Stack>
         )}
       </View>
