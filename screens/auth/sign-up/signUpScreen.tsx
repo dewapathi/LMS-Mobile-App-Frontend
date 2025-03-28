@@ -28,9 +28,9 @@ import {
   Nunito_700Bold,
   Nunito_600SemiBold,
 } from "@expo-google-fonts/nunito";
-import { authStyle } from "@/styles/auth/auth.style";
+import { authStyle } from "@/styles/auth/authStyle";
 import { TextInput } from "react-native-gesture-handler";
-import { commonStyles } from "@/styles/common/common.styles";
+import { commonStyles } from "@/styles/common/commonStyles";
 import { styles } from "@/styles/onboarding/onboard";
 import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";

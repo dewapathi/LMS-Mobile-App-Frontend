@@ -9,7 +9,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import AppIntroSlider from "react-native-app-intro-slider";
 import { onboardingSwiperData } from "@/constants/constants";
 import { router } from "expo-router";
-import { commonStyles } from "@/styles/common/common.styles";
+import { commonStyles } from "@/styles/common/commonStyles";
 import { styles } from "@/styles/onboarding/onboard";
 
 export default function WelcomeIntroScreen() {
