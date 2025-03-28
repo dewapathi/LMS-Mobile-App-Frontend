@@ -6,13 +6,11 @@ import {
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { Image, Text, View } from "react-native";
-import Onboarding from "./(routes)/onboarding";
+import { Text, View } from "react-native";
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -62,7 +60,7 @@ function RootLayoutNav() {
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
             <Stack.Screen name="/welcome-intro/index" />
-            <Stack.Screen name="/login/index" />
+            <Stack.Screen name="/sign-in/index" />
             <Stack.Screen name="/sign-up/index" />
             <Stack.Screen name="/forgot-password/index" />
           </Stack>

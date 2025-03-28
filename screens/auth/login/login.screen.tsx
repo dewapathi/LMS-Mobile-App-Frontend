@@ -32,7 +32,7 @@ import { commonStyles } from "@/styles/common/common.styles";
 import { styles } from "@/styles/onboarding/onboard";
 import { router } from "expo-router";
 
-export default function LoginScreen() {
+export default function SignInScreen() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [buttonSpinner, setButtonSpinner] = useState(false);
   const [userInfo, setUserInfo] = useState({

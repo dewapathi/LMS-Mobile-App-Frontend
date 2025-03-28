@@ -73,10 +73,10 @@ export default function WelcomeIntroScreen() {
       renderItem={renderItem}
       data={onboardingSwiperData}
       onDone={() => {
-        router.push("/login");
+        router.push("/sign-in");
       }}
       onSkip={() => {
-        router.push("/login");
+        router.push("/sign-in");
       }}
       renderNextButton={() => (
         <View style={styles.welcomeButtonStyle}>

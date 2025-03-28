@@ -333,7 +333,7 @@ export default function SignUpScreen() {
           {/* Sign In Redirect */}
           <View style={authStyle.signUpRedirect}>
             <Text style={authStyle.redirectText}>Already have an account?</Text>
-            <TouchableOpacity onPress={() => router.push("/login")}>
+            <TouchableOpacity onPress={() => router.push("/sign-in")}>
               <Text style={authStyle.redirectLink}>Sign In</Text>
             </TouchableOpacity>
           </View>
