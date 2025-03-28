@@ -10,62 +10,48 @@ import { useEffect, useState } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+const loading = false;
+const user = false;
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
+function RootLayoutNav() {
+  // const {user, loading} = useAuth();
+  const colorSchema = useColorScheme();
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync().catch(console.warn);
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    // Use a placeholder screen instead of `return null`
+  if (loading) {
     return (
-      <View>
-        <Text>Loading...</Text>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
       </View>
     );
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Text> </Text>
-      {/* Wrap everything in GestureHandlerRootView */}
-      <RootLayoutNav />
-    </GestureHandlerRootView>
+    <ThemeProvider value={colorSchema === "dark" ? DarkTheme : DefaultTheme}>
+      <Stack screenOptions={{ headerShown: false }}>
+        {!user ? (
+          <>
+            <Stack.Screen name="(auth)/sign-in" />
+            <Stack.Screen name="(auth)/sign-up" />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="(app)" />
+            <Stack.Screen name="course/[id]" />
+          </>
+        )}
+      </Stack>
+    </ThemeProvider>
   );
 }
 
-function RootLayoutNav() {
-  const [isLogging, setIsLogging] = useState(false);
-  const colorScheme = useColorScheme();
-
+export default function RootLayout() {
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <View style={{ flex: 1 }}>
-        {isLogging ? (
-          <Text>Logging...</Text>
-        ) : (
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="/welcome-intro/index" />
-            <Stack.Screen name="/sign-in/index" />
-            <Stack.Screen name="/sign-up/index" />
-            <Stack.Screen name="/forgot-password/index" />
-          </Stack>
-        )}
-      </View>
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <RootLayoutNav />
+    </GestureHandlerRootView>
   );
 }
