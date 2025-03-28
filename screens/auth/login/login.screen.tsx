@@ -40,15 +40,15 @@ export default function LoginScreen() {
     password: "",
   });
   const [required, setRequired] = useState("");
-    let [fontsLoaded, fontError] = useFonts({
-      Raleway_700Bold,
-      Nunito_400Regular,
-      Nunito_600SemiBold,
-    });
-  
-    if (!fontsLoaded && !fontError) {
-      return null;
-    }
+  let [fontsLoaded, fontError] = useFonts({
+    Raleway_700Bold,
+    Nunito_400Regular,
+    Nunito_600SemiBold,
+  });
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
 
   const handlePasswordValidation = (value: string) => {
     setUserInfo({ ...userInfo, password: value });
@@ -181,21 +181,16 @@ export default function LoginScreen() {
             )}
           </TouchableOpacity>
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              marginTop: 20,
-              gap: 10,
-            }}
-          >
-            <TouchableOpacity>
-              <FontAwesome name="google" size={30} />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <FontAwesome name="github" size={30} />
-            </TouchableOpacity>
+          <View style={authStyle.socialLoginContainer}>
+            <Text style={authStyle.socialLoginText}>Or sign up with</Text>
+            <View style={authStyle.socialIconsContainer}>
+              <TouchableOpacity style={authStyle.socialIcon}>
+                <FontAwesome name="google" size={24} color="#DB4437" />
+              </TouchableOpacity>
+              <TouchableOpacity style={authStyle.socialIcon}>
+                <FontAwesome name="github" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={authStyle.signUpRedirect}>

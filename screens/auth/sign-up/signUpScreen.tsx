@@ -34,6 +34,7 @@ import { commonStyles } from "@/styles/common/common.styles";
 import { styles } from "@/styles/onboarding/onboard";
 import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpSchema } from "@/schemas/signUpSchema";
