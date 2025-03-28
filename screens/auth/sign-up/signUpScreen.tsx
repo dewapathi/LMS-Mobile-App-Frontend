@@ -40,7 +40,7 @@ import { SignUpSchema } from "@/schemas/signUpSchema";
 
 type SignUpFormData = z.infer<typeof SignUpSchema>;
 
-const ROLE_OPTIONS = [
+const ROLE_OPTIONS: { label: string; value: SignUpFormData["role"] }[] = [
   { label: "Admin", value: "admin" },
   { label: "Teacher", value: "teacher" },
   { label: "Student", value: "student" },
@@ -63,7 +63,7 @@ export default function SignUpScreen() {
       email: "",
       username: "",
       password: "",
-      role: "",
+      role: "student",
     },
   });
 
@@ -316,7 +316,26 @@ export default function SignUpScreen() {
           </TouchableOpacity>
 
           {/* Rest of your component remains the same */}
-          {/* ... */}
+          {/* Social Login Options */}
+          <View style={authStyle.socialLoginContainer}>
+            <Text style={authStyle.socialLoginText}>Or sign up with</Text>
+            <View style={authStyle.socialIconsContainer}>
+              <TouchableOpacity style={authStyle.socialIcon}>
+                <FontAwesome name="google" size={24} color="#DB4437" />
+              </TouchableOpacity>
+              <TouchableOpacity style={authStyle.socialIcon}>
+                <FontAwesome name="github" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Sign In Redirect */}
+          <View style={authStyle.signUpRedirect}>
+            <Text style={authStyle.redirectText}>Already have an account?</Text>
+            <TouchableOpacity onPress={() => router.push("/login")}>
+              <Text style={authStyle.redirectLink}>Sign In</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Role Picker Modal */}
