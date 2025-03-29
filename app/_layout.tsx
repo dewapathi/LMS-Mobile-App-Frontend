@@ -34,13 +34,11 @@ function RootLayoutNav() {
       <Stack screenOptions={{ headerShown: false }}>
         {!user ? (
           <>
-            <Stack.Screen name="(auth)/sign-in" />
-            <Stack.Screen name="(auth)/sign-up" />
+            <Stack.Screen name="(auth)" />
           </>
         ) : (
           <>
             <Stack.Screen name="(app)" />
-            <Stack.Screen name="course/[id]" />
           </>
         )}
       </Stack>
