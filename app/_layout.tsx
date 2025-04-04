@@ -1,18 +1,20 @@
+import React from "react";
+import { ActivityIndicator, View } from "react-native";
+
+import { Stack } from "expo-router";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
-import "react-native-reanimated";
+
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { ActivityIndicator, Text, View } from "react-native";
-import React from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+const queryClient = new QueryClient();
 
 const loading = false;
 const user = false;
@@ -49,7 +51,9 @@ function RootLayoutNav() {
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <RootLayoutNav />
+      <QueryClientProvider client={queryClient}>
+        <RootLayoutNav />
+      </QueryClientProvider>
     </GestureHandlerRootView>
   );
 }

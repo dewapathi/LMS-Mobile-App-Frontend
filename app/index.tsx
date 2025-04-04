@@ -10,9 +10,9 @@ import { Redirect } from "expo-router";
 
 export default function Index() {
   // const { user } = useAuth();
-  const user = true;
+  const user = false;
 
   // If user is authenticated, go to home page
   // If not, go to onboarding
-  return <Redirect href={user ? "/(app)" : "/(auth)/onboarding"} />;
+  return <Redirect href={user ? "/(app)" : "/(auth)/sign-in"} />;
 }

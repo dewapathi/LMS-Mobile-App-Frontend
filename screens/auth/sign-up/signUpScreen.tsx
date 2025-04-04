@@ -7,25 +7,19 @@ import {
   ActivityIndicator,
   Modal,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import {
-  Entypo,
   FontAwesome,
   Fontisto,
   Ionicons,
   SimpleLineIcons,
 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  useFonts,
-  Raleway_700Bold,
-  Raleway_600SemiBold,
-} from "@expo-google-fonts/raleway";
+import { useFonts, Raleway_700Bold } from "@expo-google-fonts/raleway";
 import {
   Nunito_400Regular,
-  Nunito_500Medium,
-  Nunito_700Bold,
   Nunito_600SemiBold,
 } from "@expo-google-fonts/nunito";
 import { authStyle } from "@/styles/auth/authStyle";
@@ -38,6 +32,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpSchema } from "@/schemas/signUpSchema";
+import { authApi } from "@/api/auth/authApi";
 
 type SignUpFormData = z.infer<typeof SignUpSchema>;
 
@@ -65,6 +60,7 @@ export default function SignUpScreen() {
       username: "",
       password: "",
       role: "student",
+      address: {},
     },
   });
 
@@ -79,8 +75,24 @@ export default function SignUpScreen() {
   }
 
   const onSubmit = async (data: SignUpFormData) => {
-    console.log("Form data:", data);
     // Add your submission logic here
+    try {
+      await authApi.signUp(data);
+
+      Alert.alert(
+        "Success",
+        "Account created successfully! Please check your email to verify your account.",
+        [{ text: "OK", onPress: () => router.push("/sign-in") }]
+      );
+    } catch (error: any) {
+      let errorMessage = "Failed to create account";
+
+      if (error?.details?.error?.message) {
+        errorMessage = error.details.error.message;
+      }
+
+      Alert.alert("Error", errorMessage);
+    }
   };
 
   return (
