@@ -1,26 +1,37 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Alert,
+} from 'react-native';
+// import { useAppDispatch } from '../../../core/store/hooks';
+// import { login } from '../store/authSlice';
 
-export const LoginScreen = ({ navigation }:any) => {
+export const LoginScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-//   const dispatch = useAppDispatch();
 
-//   const handleLogin = async () => {
-//     try {
-//       await dispatch(login({ email, password })).unwrap();
-//       // Navigation handled by the auth state change in AppNavigator
-//     } catch (error) {
-//       Alert.alert('Login Failed', error.message);
-//     }
-//   };
+  // const dispatch = useAppDispatch();
+  // const handleLogin = async () => { ... }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Image
+        source={require('../../../assets/images/lms12.jpg')}
+        style={styles.logo}
+      />
+
+      <Text style={styles.title}>Welcome Back</Text>
+      <Text style={styles.subtitle}>Login to your LMS account</Text>
+
       <TextInput
         style={styles.input}
         placeholder="Email"
+        placeholderTextColor="#888"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -29,16 +40,20 @@ export const LoginScreen = ({ navigation }:any) => {
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor="#888"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Login" />
-      <Text 
+
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+
+      <Text
         style={styles.link}
-        onPress={() => navigation.navigate('Register')}
-      >
-        Don't have an account? Register
+        onPress={() => navigation.navigate('Register' as never)}>
+        Don't have an account? <Text style={styles.linkBold}>Register</Text>
       </Text>
     </View>
   );
@@ -47,25 +62,60 @@ export const LoginScreen = ({ navigation }:any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 24,
     justifyContent: 'center',
-    padding: 20,
+    backgroundColor: '#f5f7fb',
+  },
+  logo: {
+    width: 1500,
+    height: 250,
+    alignSelf: 'center',
+    marginBottom: 32,
+    resizeMode: 'contain',
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: 26,
+    fontWeight: 'bold',
     textAlign: 'center',
+    marginBottom: 4,
+    color: '#333',
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 24,
+    color: '#777',
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 48,
+    borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-    borderRadius: 4,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    marginBottom: 16,
+    backgroundColor: '#fff',
+  },
+  button: {
+    backgroundColor: '#6200ee',
+    paddingVertical: 14,
+    borderRadius: 12,
+    marginBottom: 24,
+    elevation: 2,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+    textAlign: 'center',
+    fontSize: 16,
   },
   link: {
-    marginTop: 15,
-    color: 'blue',
     textAlign: 'center',
+    fontSize: 14,
+    color: '#444',
+  },
+  linkBold: {
+    color: '#6200ee',
+    fontWeight: 'bold',
   },
 });
