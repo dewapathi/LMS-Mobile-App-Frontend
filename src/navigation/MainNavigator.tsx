@@ -1,6 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {HomeScreen} from '../features/home/screens/HomeScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {ProfileScreen} from '../features/profile/screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -24,5 +25,6 @@ export const MainNavigator = () => (
       tabBarInactiveTintColor: 'gray',
     })}>
     <Tab.Screen name="Home" component={HomeScreen} />
+    <Tab.Screen name="Profile" component={ProfileScreen} />
   </Tab.Navigator>
 );

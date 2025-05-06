@@ -8,15 +8,21 @@ import {
   Image,
   Alert,
 } from 'react-native';
-// import { useAppDispatch } from '../../../core/store/hooks';
-// import { login } from '../store/authSlice';
+import {useAppDispatch} from '../../../core/store/hook';
+import {login} from '../store/authSlice';
 
 export const LoginScreen = ({navigation}: any) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');  
 
-  // const dispatch = useAppDispatch();
-  // const handleLogin = async () => { ... }
+  const dispatch = useAppDispatch();
+  const handleLogin = async () => {
+    try {      
+      await dispatch(login({username, password})).unwrap();
+    } catch (error: any) {
+      Alert.alert('Login Failed', error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -32,8 +38,8 @@ export const LoginScreen = ({navigation}: any) => {
         style={styles.input}
         placeholder="Email"
         placeholderTextColor="#888"
-        value={email}
-        onChangeText={setEmail}
+        value={username}
+        onChangeText={setUsername}
         keyboardType="email-address"
         autoCapitalize="none"
       />
@@ -47,7 +53,9 @@ export const LoginScreen = ({navigation}: any) => {
       />
 
       <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Login</Text>
+        <Text style={styles.buttonText} onPress={handleLogin}>
+          Login
+        </Text>
       </TouchableOpacity>
 
       <Text
