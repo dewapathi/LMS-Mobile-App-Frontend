@@ -1,30 +1,27 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {HomeScreen} from '../features/home/screens/HomeScreen';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {ProfileScreen} from '../features/profile/screens/ProfileScreen';
+import {ProfileScreen} from '../features/shared/profile/screens/ProfileScreen';
+import {useAppSelector} from '../core/store/hook';
+import {AdminHomeScreen} from '../features/home/screens/AdminScreen';
+import {LecturerScreen} from '../features/home/screens/LecturerScreen';
+import {StudentScreen} from '../features/home/screens/StudentScreen';
+import {AdminNavigator} from './AdminNavigator';
 
 const Tab = createBottomTabNavigator();
 
-export const MainNavigator = () => (
-  <Tab.Navigator
-    screenOptions={({route}) => ({
-      tabBarIcon: ({focused, color, size}) => {
-        let iconName;
+export const MainNavigator = () => {
+  const role = useAppSelector(state => state.auth.user.role);
 
-        if (route.name === 'Home') {
-          iconName = focused ? 'home' : 'home-outline';
-        } else if (route.name === 'Courses') {
-          iconName = focused ? 'book' : 'book-outline';
-        } else if (route.name === 'Profile') {
-          iconName = focused ? 'person' : 'person-outline';
-        }
+  const RoleNavigator =
+    role === 'admin'
+      ? AdminNavigator
+      : role === 'teacher'
+      ? LecturerScreen
+      : StudentScreen;
 
-        return <Ionicons name={iconName} size={size} color={color} />;
-      },
-      tabBarActiveTintColor: '#6200ee',
-      tabBarInactiveTintColor: 'gray',
-    })}>
-    <Tab.Screen name="Home" component={HomeScreen} />
-    <Tab.Screen name="Profile" component={ProfileScreen} />
-  </Tab.Navigator>
-);
+  return (
+    <Tab.Navigator screenOptions={{headerShown: false}}>
+      <Tab.Screen name="RoleRoot" component={RoleNavigator} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
+  );
+};

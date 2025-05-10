@@ -16,6 +16,13 @@ export type MainTabParamList = {
   Profile: undefined;
 };
 
+export type AdminStackParamList = {
+  AdminHome: undefined;
+  CourseManagement: undefined;
+  UserManagement: undefined;
+  ParamReports: undefined;
+};
+
 declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}

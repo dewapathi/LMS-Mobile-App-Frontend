@@ -1,6 +1,6 @@
 import {Button, StyleSheet, Text, View} from 'react-native';
-import {useAppDispatch, useAppSelector} from '../../../core/store/hook';
-import { logout } from '../../auth/store/authSlice';
+import {useAppDispatch, useAppSelector} from '../../../../core/store/hook';
+import { logout } from '../../../auth/store/authSlice';
 
 export const ProfileScreen = () => {
   const user = useAppSelector(state => state.auth.user);  

@@ -34,4 +34,6 @@ react-native-svg
 react-hook-form zod @hookform/resolvers
 -D @types/lodash
 @react-native-picker/picker
+@react-navigation/stack
+
 
