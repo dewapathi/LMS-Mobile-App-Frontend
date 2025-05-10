@@ -8,8 +8,10 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  View,
+  KeyboardTypeOptions,
 } from 'react-native';
-import {Controller, useForm} from 'react-hook-form';
+import {Controller, FieldPath, get, useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {RegisterFormData, registerSchema} from '../../../schemas';
 import {Picker} from '@react-native-picker/picker';
@@ -27,7 +29,10 @@ export const RegisterScreen = ({navigation}: any) => {
     setValue,
     formState: {errors},
     watch,
-  } = useForm<RegisterFormData>({resolver: zodResolver(registerSchema)});
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {},
+  });
 
   const onSubmit = async (data: RegisterFormData) => {
     console.log('RegisterFormData', data);
@@ -50,6 +55,43 @@ export const RegisterScreen = ({navigation}: any) => {
     }
   }, [status]);
 
+  const fields: {
+    name: FieldPath<RegisterFormData>;
+    label: string;
+    type?: 'text' | 'picker';
+    options?: {label: string; value: string}[];
+    secureTextEntry?: boolean;
+    keyboardType?: KeyboardTypeOptions;
+    autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  }[] = [
+    {name: 'firstName', label: 'First Name'},
+    {name: 'lastName', label: 'Last Name'},
+    {
+      name: 'email',
+      label: 'email',
+      keyboardType: 'email-address',
+      autoCapitalize: 'none',
+    },
+    {name: 'username', label: 'Username'},
+    {name: 'password', label: 'Password', secureTextEntry: true},
+    {
+      name: 'role',
+      label: 'Role',
+      type: 'picker',
+      options: [
+        {label: 'Select Role', value: ''},
+        {label: 'Student', value: 'student'},
+        {label: 'Teacher', value: 'teacher'},
+        {label: 'Admin', value: 'admin'},
+      ],
+    },
+    {name: 'address.street', label: 'Street'},
+    {name: 'address.city', label: 'City'},
+    {name: 'address.state', label: 'State'},
+    {name: 'address.country', label: 'Country'},
+    {name: 'address.zipCode', label: 'ZIP Code', keyboardType: 'numeric'},
+  ];
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image
@@ -59,78 +101,52 @@ export const RegisterScreen = ({navigation}: any) => {
 
       <Text style={styles.title}>Create an Account</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="First Name"
-        onChangeText={text => setValue('firstName', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Last Name"
-        onChangeText={text => setValue('lastName', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        onChangeText={text => setValue('username', text)}
-      />
-      {errors.username && <Text>{errors.username.message}</Text>}
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        onChangeText={text => setValue('email', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        onChangeText={text => setValue('password', text)}
-      />
-      <Controller
-        control={control}
-        name="role"
-        render={({field: {onChange, value}}) => (
-          <Picker
-            selectedValue={value}
-            onValueChange={itemValue => onChange(itemValue)}
-            style={{height: 50, width: '100%'}}>
-            <Picker.Item label="Select Role" value="" />
-            <Picker.Item label="Student" value="student" />
-            <Picker.Item label="Teacher" value="teacher" />
-            <Picker.Item label="Admin" value="admin" />
-          </Picker>
-        )}
-      />
+      {fields.map(
+        ({name, label, keyboardType, secureTextEntry, type, options}) => (
+          <Controller
+            key={name}
+            control={control}
+            name={name}
+            render={({field: {onChange, value}}) => {
+              const errorMessage = get(errors, name)?.message;
 
-      <Text style={styles.sectionTitle}>Address</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Street"
-        onChangeText={text => setValue('address.street', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="City"
-        onChangeText={text => setValue('address.city', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="State"
-        onChangeText={text => setValue('address.state', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Country"
-        onChangeText={text => setValue('address.country', text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Zip Code"
-        keyboardType="numeric"
-        onChangeText={text => setValue('address.zipCode', text)}
-      />
+              return (
+                <View style={{marginBottom: 12}}>
+                  {type === 'picker' ? (
+                    <View style={styles.pickerWrapper}>
+                      <Picker
+                        selectedValue={value}
+                        onValueChange={onChange}
+                        style={styles.picker}>
+                        {options?.map(option => (
+                          <Picker.Item
+                            key={option.value}
+                            label={option.label}
+                            value={option.value}
+                          />
+                        ))}
+                      </Picker>
+                    </View>
+                  ) : (
+                    <TextInput
+                      style={styles.input}
+                      placeholder={label}
+                      value={value?.toString() ?? ''}
+                      onChangeText={onChange}
+                      keyboardType={keyboardType}
+                      secureTextEntry={secureTextEntry}
+                      autoCapitalize={name === 'email' ? 'none' : undefined}
+                    />
+                  )}
+                  {errorMessage && (
+                    <Text style={styles.error}>{errorMessage}</Text>
+                  )}
+                </View>
+              );
+            }}
+          />
+        ),
+      )}
 
       <TouchableOpacity
         style={styles.button}
@@ -157,10 +173,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 24,
     backgroundColor: '#f5f7fb',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   logo: {
-    width: 2000,
+    width: 360,
     height: 200,
     marginBottom: 20,
     resizeMode: 'contain',
@@ -171,14 +187,6 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 16,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#444',
-    alignSelf: 'flex-start',
-    marginTop: 20,
-    marginBottom: 8,
-  },
   input: {
     width: '100%',
     height: 48,
@@ -187,8 +195,23 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 16,
     fontSize: 16,
-    marginBottom: 12,
     backgroundColor: '#fff',
+  },
+  pickerWrapper: {
+    width: '100%',
+    height: 48,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+  },
+  picker: {
+    width: '100%',
+    marginLeft: 8,
+    // height: 48,
+    paddingHorizontal: 16,
   },
   button: {
     backgroundColor: '#6200ee',
@@ -211,5 +234,10 @@ const styles = StyleSheet.create({
   linkBold: {
     color: '#6200ee',
     fontWeight: 'bold',
+  },
+  error: {
+    color: 'red',
+    fontSize: 13,
+    marginTop: 4,
   },
 });
