@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
 import {
-  View,
   Text,
   TextInput,
   StyleSheet,
@@ -8,45 +7,48 @@ import {
   ScrollView,
   Image,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {Controller, useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {RegisterFormData, registerSchema} from '../../../schemas';
+import {Picker} from '@react-native-picker/picker';
+import {useAppDispatch, useAppSelector} from '../../../core/store/hook';
+import {registration, resetRegisterStatus} from '../store/authSlice';
 
 export const RegisterScreen = ({navigation}: any) => {
-  // Form fields
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
-  const [role, setRole] = useState('student'); // default role
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const dispatch = useAppDispatch();
+  const status = useAppSelector(state => state.auth.registerStatus);
 
-  const [street, setStreet] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [country, setCountry] = useState('');
-  const [zipCode, setZipCode] = useState('');
+  const {
+    control,
+    handleSubmit,
+    register,
+    setValue,
+    formState: {errors},
+    watch,
+  } = useForm<RegisterFormData>({resolver: zodResolver(registerSchema)});
 
-  const handleRegister = () => {
-    const payload = {
-      username,
-      password,
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      role,
-      address: {
-        street,
-        city,
-        state,
-        country,
-        zip_code: zipCode,
-      },
-    };
-
-    // TODO: replace with dispatch(register(payload))
-    console.log('Register payload:', JSON.stringify(payload, null, 2));
-    Alert.alert('Registration Submitted', 'Check console for payload');
+  const onSubmit = async (data: RegisterFormData) => {
+    console.log('RegisterFormData', data);
+    try {
+      await dispatch(registration(data)).unwrap();
+      Alert.alert(
+        'Registration Successful',
+        'Please verify your account. A confirmation email has been sent.',
+        [{text: 'OK', onPress: () => navigation.navigate('Login')}],
+      );
+    } catch (error: any) {
+      Alert.alert('Registration Failed', error);
+    }
   };
+
+  useEffect(() => {
+    if (status === 'succeeded') {
+      navigation.navigate('Login');
+      dispatch(resetRegisterStatus());
+    }
+  }, [status]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -60,78 +62,85 @@ export const RegisterScreen = ({navigation}: any) => {
       <TextInput
         style={styles.input}
         placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
+        onChangeText={text => setValue('firstName', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
+        onChangeText={text => setValue('lastName', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
+        onChangeText={text => setValue('username', text)}
       />
+      {errors.username && <Text>{errors.username.message}</Text>}
       <TextInput
         style={styles.input}
         placeholder="Email"
-        value={email}
         keyboardType="email-address"
         autoCapitalize="none"
-        onChangeText={setEmail}
+        onChangeText={text => setValue('email', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
-        value={password}
         secureTextEntry
-        onChangeText={setPassword}
+        onChangeText={text => setValue('password', text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Role (e.g., teacher or student)"
-        value={role}
-        onChangeText={setRole}
+      <Controller
+        control={control}
+        name="role"
+        render={({field: {onChange, value}}) => (
+          <Picker
+            selectedValue={value}
+            onValueChange={itemValue => onChange(itemValue)}
+            style={{height: 50, width: '100%'}}>
+            <Picker.Item label="Select Role" value="" />
+            <Picker.Item label="Student" value="student" />
+            <Picker.Item label="Teacher" value="teacher" />
+            <Picker.Item label="Admin" value="admin" />
+          </Picker>
+        )}
       />
 
       <Text style={styles.sectionTitle}>Address</Text>
       <TextInput
         style={styles.input}
         placeholder="Street"
-        value={street}
-        onChangeText={setStreet}
+        onChangeText={text => setValue('address.street', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="City"
-        value={city}
-        onChangeText={setCity}
+        onChangeText={text => setValue('address.city', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="State"
-        value={state}
-        onChangeText={setState}
+        onChangeText={text => setValue('address.state', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Country"
-        value={country}
-        onChangeText={setCountry}
+        onChangeText={text => setValue('address.country', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Zip Code"
-        value={zipCode}
         keyboardType="numeric"
-        onChangeText={setZipCode}
+        onChangeText={text => setValue('address.zipCode', text)}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Register</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleSubmit(onSubmit)}
+        disabled={status === 'loading'}>
+        {status === 'loading' ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.buttonText}>Register</Text>
+        )}
       </TouchableOpacity>
 
       <Text

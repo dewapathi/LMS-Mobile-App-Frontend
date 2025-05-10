@@ -7,20 +7,23 @@ import {
   StyleSheet,
   Image,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
-import {useAppDispatch} from '../../../core/store/hook';
+import {useAppDispatch, useAppSelector} from '../../../core/store/hook';
 import {login} from '../store/authSlice';
 
 export const LoginScreen = ({navigation}: any) => {
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');  
+  const [password, setPassword] = useState('');
 
   const dispatch = useAppDispatch();
+  const status = useAppSelector(state => state.auth.loginStatus);
+
   const handleLogin = async () => {
-    try {      
+    try {
       await dispatch(login({username, password})).unwrap();
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
+      Alert.alert('Login Failed', error);
     }
   };
 
@@ -52,10 +55,15 @@ export const LoginScreen = ({navigation}: any) => {
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText} onPress={handleLogin}>
-          Login
-        </Text>
+      <TouchableOpacity
+        style={[styles.button, status === 'loading' && {opacity: 0.6}]}
+        onPress={handleLogin}
+        disabled={status === 'loading'}>
+        {status === 'loading' ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.buttonText}>Login</Text>
+        )}
       </TouchableOpacity>
 
       <Text

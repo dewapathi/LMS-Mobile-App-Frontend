@@ -9,6 +9,7 @@ export const ProfileScreen = () => {
   const handleLogout = () => {
     dispatch(logout())
   }
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profile</Text>
