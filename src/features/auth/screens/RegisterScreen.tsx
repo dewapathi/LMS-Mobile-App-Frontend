@@ -17,6 +17,7 @@ import {RegisterFormData, registerSchema} from '../../../schemas';
 import {Picker} from '@react-native-picker/picker';
 import {useAppDispatch, useAppSelector} from '../../../core/store/hook';
 import {registration, resetRegisterStatus} from '../store/authSlice';
+import { registrationFormfields } from '../config/registerField';
 
 export const RegisterScreen = ({navigation}: any) => {
   const dispatch = useAppDispatch();
@@ -55,43 +56,6 @@ export const RegisterScreen = ({navigation}: any) => {
     }
   }, [status]);
 
-  const fields: {
-    name: FieldPath<RegisterFormData>;
-    label: string;
-    type?: 'text' | 'picker';
-    options?: {label: string; value: string}[];
-    secureTextEntry?: boolean;
-    keyboardType?: KeyboardTypeOptions;
-    autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
-  }[] = [
-    {name: 'firstName', label: 'First Name'},
-    {name: 'lastName', label: 'Last Name'},
-    {
-      name: 'email',
-      label: 'email',
-      keyboardType: 'email-address',
-      autoCapitalize: 'none',
-    },
-    {name: 'username', label: 'Username'},
-    {name: 'password', label: 'Password', secureTextEntry: true},
-    {
-      name: 'role',
-      label: 'Role',
-      type: 'picker',
-      options: [
-        {label: 'Select Role', value: ''},
-        {label: 'Student', value: 'student'},
-        {label: 'Teacher', value: 'teacher'},
-        {label: 'Admin', value: 'admin'},
-      ],
-    },
-    {name: 'address.street', label: 'Street'},
-    {name: 'address.city', label: 'City'},
-    {name: 'address.state', label: 'State'},
-    {name: 'address.country', label: 'Country'},
-    {name: 'address.zipCode', label: 'ZIP Code', keyboardType: 'numeric'},
-  ];
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image
@@ -101,7 +65,7 @@ export const RegisterScreen = ({navigation}: any) => {
 
       <Text style={styles.title}>Create an Account</Text>
 
-      {fields.map(
+      {registrationFormfields.map(
         ({name, label, keyboardType, secureTextEntry, type, options}) => (
           <Controller
             key={name}
