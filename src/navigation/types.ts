@@ -1,4 +1,5 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
+import { Course } from '../types/course';
 
 export type RootStackParamList = {
   Auth: NavigatorScreenParams<AuthStackParamList>;
@@ -21,6 +22,7 @@ export type AdminStackParamList = {
   CourseManagement: undefined;
   UserManagement: undefined;
   ParamReports: undefined;
+  CourseForm?: { course?: Course };
 };
 
 declare global {

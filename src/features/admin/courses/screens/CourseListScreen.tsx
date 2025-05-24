@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,37 +8,45 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useAppDispatch, useAppSelector} from '../../../../core/store/hook';
+import {deleteCourse, fetchCourses} from '../store/courseSlice';
+import {CourseCard} from '../components/CourseCard';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {AdminStackParamList} from '../../../../navigation/types';
+import {Course} from '../../../../types/course';
 
 export const CourseListScreen = () => {
-  const navigation = useNavigation();
-  const loading = false;
-//   const dispatch = useAppDispatch();
-//   const { courses, loading } = useAppSelector(state => state.course);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AdminStackParamList>>();
+  const dispatch = useAppDispatch();
+  const {courses, loading} = useAppSelector(state => state.course);
 
-//   useEffect(() => {
-//     dispatch(fetchCourses());
-//   }, []);
+  useEffect(() => {
+    dispatch(fetchCourses());
+  }, []);
 
-//   const confirmDelete = (id: string) => {
-//     Alert.alert('Confirm Delete', 'Are you sure?', [
-//       { text: 'Cancel' },
-//       {
-//         text: 'Delete',
-//         style: 'destructive',
-//         onPress: () => dispatch(deleteCourse(id)),
-//       },
-//     ]);
-//   };
+  const confirmDelete = (id: number) => {
+    Alert.alert('Confirm Delete', 'Are you sure?', [
+      {text: 'Cancel'},
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => dispatch(deleteCourse(id)),
+      },
+    ]);
+  };
 
-//   const renderItem = ({ item }: any) => (
-//     <CourseCard
-//       course={item}
-//       onEdit={() => navigation.navigate('CourseForm', { course: item })}
-//       onDelete={() => confirmDelete(item.id)}
-//     />
-//   );
+  const renderItem = ({item}: any) => {
+    return (
+      <CourseCard
+        course={item}
+        onEdit={() => navigation.navigate('CourseForm', {course: item})}
+        onDelete={() => confirmDelete(item.id)}
+      />
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -48,10 +56,10 @@ export const CourseListScreen = () => {
         <ActivityIndicator size="large" color="#6200ee" />
       ) : (
         <FlatList
-          data={[]}
-        //   keyExtractor={(item) => item.id}
-        //   renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: 80 }}
+          data={courses.results || []}
+          keyExtractor={item => item.id.toString()}
+          renderItem={renderItem}
+          contentContainerStyle={{paddingBottom: 80}}
         />
       )}
 
@@ -65,8 +73,8 @@ export const CourseListScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#f9f9f9' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 16 },
+  container: {flex: 1, padding: 16, backgroundColor: '#f9f9f9'},
+  title: {fontSize: 24, fontWeight: 'bold', marginBottom: 16},
   fab: {
     position: 'absolute',
     bottom: 24,

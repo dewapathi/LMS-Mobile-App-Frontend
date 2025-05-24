@@ -25,7 +25,7 @@ export const AdminHomeScreen = () => {
 
       <TouchableOpacity 
         style={styles.card}
-        // onPress={() => navigation.navigate('UserManagement')}
+        onPress={() => navigation.navigate('UserManagement')}
       >
         <Text>Manage Users</Text>
       </TouchableOpacity>

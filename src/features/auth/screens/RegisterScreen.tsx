@@ -36,7 +36,6 @@ export const RegisterScreen = ({navigation}: any) => {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    console.log('RegisterFormData', data);
     try {
       await dispatch(registration(data)).unwrap();
       Alert.alert(
