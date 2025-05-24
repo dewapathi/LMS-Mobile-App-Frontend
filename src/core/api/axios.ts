@@ -18,7 +18,7 @@ const toSnakeCaseDeep = (obj: any): any => {
   return obj;
 };
 
-const api = axios.create({baseURL: 'http://192.168.8.101:8000/api/'});
+const api = axios.create({baseURL: 'http://192.168.8.102:8000/api/'});
 
 api.interceptors.request.use(config => {
   const state = store.getState() as RootState;
