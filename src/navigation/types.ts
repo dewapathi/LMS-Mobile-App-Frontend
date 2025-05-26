@@ -23,6 +23,7 @@ export type AdminStackParamList = {
   UserManagement: undefined;
   ParamReports: undefined;
   CourseForm?: { course?: Course };
+  UserForm?: { user?: Course };
 };
 
 declare global {
